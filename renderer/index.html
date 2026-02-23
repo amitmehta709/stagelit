@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval'; media-src * file: blob:; img-src 'self' data: https:; connect-src *; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com;" />
+  <title>StageLit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app" class="root">
+    <!-- Atmospheric background -->
+    <div class="atmosphere">
+      <div class="orb orb1"></div>
+      <div class="orb orb2"></div>
+      <div class="orb orb3"></div>
+    </div>
+
+    <!-- Flash overlay (last 15s) -->
+    <div id="flash-overlay" class="flash-overlay hidden">
+      <div class="flash-line flash-line-top"></div>
+      <div class="flash-line flash-line-bottom"></div>
+      <div class="flash-line flash-line-left"></div>
+      <div class="flash-line flash-line-right"></div>
+      <div class="flash-corner fc-tl"></div>
+      <div class="flash-corner fc-tr"></div>
+      <div class="flash-corner fc-bl"></div>
+      <div class="flash-corner fc-br"></div>
+      <div class="flash-dot fd-tl"></div>
+      <div class="flash-dot fd-tr"></div>
+      <div class="flash-dot fd-bl"></div>
+      <div class="flash-dot fd-br"></div>
+      <div class="flash-top-label">⚠ Ending Soon ⚠</div>
+      <div class="flash-bottom-timer">
+        <span id="flash-big-time">15</span>
+        <span class="flash-unit">sec</span>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-drag-region"></div>
+      <svg class="header-logo" width="38" height="38" viewBox="0 0 100 100" fill="none">
+        <defs>
+          <linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ff6b2b" /><stop offset="50%" stop-color="#ee2b7b" /><stop offset="100%" stop-color="#7c3aed" />
+          </linearGradient>
+          <filter id="gl"><feGaussianBlur stdDeviation="2.5" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+        </defs>
+        <rect x="4" y="4" width="92" height="92" rx="22" fill="#08080f" stroke="url(#lg1)" stroke-width="2.5" />
+        <rect x="44" y="30" width="12" height="26" rx="6" fill="url(#lg1)" filter="url(#gl)" />
+        <circle cx="50" cy="30" r="11" fill="url(#lg1)" filter="url(#gl)" />
+        <line x1="50" y1="56" x2="50" y2="70" stroke="url(#lg1)" stroke-width="3" stroke-linecap="round" />
+        <line x1="40" y1="70" x2="60" y2="70" stroke="url(#lg1)" stroke-width="3" stroke-linecap="round" />
+        <path d="M30 32 Q25 42 30 52" stroke="#ff6b2b" stroke-width="2" fill="none" opacity="0.5" stroke-linecap="round" />
+        <path d="M70 32 Q75 42 70 52" stroke="#ff6b2b" stroke-width="2" fill="none" opacity="0.5" stroke-linecap="round" />
+      </svg>
+      <div class="header-text">
+        <h1 class="header-title">STAGELIT</h1>
+        <div class="header-tagline">Singing Orchestra · Karaoke</div>
+      </div>
+      <div class="header-right">
+        <div id="status-dot" class="status-dot off"></div>
+        <span id="status-text" class="status-text">Ready</span>
+      </div>
+    </header>
+
+    <!-- Main layout -->
+    <div class="main">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <!-- Tabs -->
+        <div class="lockable" id="lock-tabs">
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="0">📂 Local Files</button>
+            <button class="tab-btn" data-tab="1">🌐 Online / YouTube</button>
+          </div>
+        </div>
+
+        <!-- Tab 0: Local Files -->
+        <div class="lockable" id="lock-files">
+          <div id="tab-panel-0" class="tab-panel">
+            <div class="field-group">
+              <div class="label">Media Folder</div>
+              <div class="input-row">
+                <input class="input" id="folder-path" placeholder="/path/to/media/folder" readonly />
+                <button class="btn-sec" id="browse-btn">Browse</button>
+              </div>
+            </div>
+            <div class="field-group">
+              <div class="label">Select Track</div>
+              <select class="select" id="file-select">
+                <option value="">— Browse a folder first —</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Tab 1: Online -->
+          <div id="tab-panel-1" class="tab-panel hidden">
+            <div class="field-group">
+              <div class="label">YouTube / Video URL</div>
+              <input class="input full-width" id="url-input" placeholder="https://www.youtube.com/watch?v=..." />
+            </div>
+
+            <!-- Playback mode selector -->
+            <div class="field-group">
+              <div class="label">Playback Mode</div>
+              <div class="mode-selector">
+                <label class="mode-option active" data-mode="download">
+                  <input type="radio" name="play-mode" value="download" checked hidden />
+                  <div class="mode-icon">📥</div>
+                  <div class="mode-info">
+                    <div class="mode-title">Download & Play</div>
+                    <div class="mode-desc">No ads · Clean playback · yt-dlp</div>
+                  </div>
+                </label>
+                <label class="mode-option" data-mode="browser">
+                  <input type="radio" name="play-mode" value="browser" hidden />
+                  <div class="mode-icon">🌐</div>
+                  <div class="mode-info">
+                    <div class="mode-title">Browser Mode</div>
+                    <div class="mode-desc">Instant · Auto-closes on timer end</div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div class="info-box" id="ytdlp-info">
+              Videos are <strong>downloaded first</strong> via yt-dlp — no ads, no buffering, perfect playback.<br>
+              <span id="ytdlp-status">Checking yt-dlp...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Duration -->
+        <div class="lockable" id="lock-duration">
+          <div class="dur-wrap">
+            <div class="label">Play Duration</div>
+            <div class="dur-row">
+              <input type="range" class="slider" id="duration-slider" min="0.5" max="20" step="0.5" value="3" />
+              <div class="dur-display">
+                <span class="dur-val" id="dur-val">3</span>
+                <span class="dur-unit">min</span>
+              </div>
+            </div>
+            <div class="dur-hint">Max 20 min · Warning at 30s · Flash at 15s</div>
+            <label class="full-song-toggle" id="full-song-toggle">
+              <input type="checkbox" id="full-song-check" />
+              <span class="full-song-slider"></span>
+              <span class="full-song-label">Full Song</span>
+              <span class="full-song-hint" id="full-song-hint">Play entire track length</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Play / Stop -->
+        <button class="play-btn go" id="play-btn" disabled>▶ Start Performance</button>
+
+        <!-- Status message -->
+        <div id="status-msg" class="status-msg hidden"></div>
+
+        <div class="sidebar-spacer"></div>
+        <div class="sidebar-footer">Electron · macOS & Windows</div>
+      </aside>
+
+      <!-- Stage area -->
+      <main class="stage" id="stage-area">
+        <!-- Warning banner (30s–15s) -->
+        <div id="warning-banner" class="warning-banner hidden">
+          <span class="warning-label">⏱ Playback ending soon</span>
+          <span class="warning-time" id="warning-time">30s</span>
+        </div>
+
+        <!-- Flash inline banner (last 15s) -->
+        <div id="flash-banner" class="flash-inline-banner hidden">
+          <span class="flash-inline-label">⚠ Ending</span>
+          <span class="flash-inline-time" id="flash-inline-time">15s</span>
+        </div>
+
+        <!-- Video / Player stage -->
+        <div id="video-box" class="video-box hidden">
+          <!-- Local video/audio -->
+          <!-- YouTube webview removed — all online URLs use yt-dlp + native HTML5 player -->
+          <video id="local-video" class="media-player hidden" playsinline></video>
+          <audio id="local-audio" class="hidden"></audio>
+          <!-- Audio visualization overlay -->
+          <div id="audio-viz" class="audio-viz hidden">
+            <div class="disc"><div class="hole"></div></div>
+            <div id="eq-large" class="eq-wrap eq-large"></div>
+            <div class="video-note">Audio visualization</div>
+          </div>
+        </div>
+
+        <!-- Now Playing card -->
+        <div id="now-card" class="now-card hidden">
+          <div class="ring-wrap">
+            <svg id="progress-ring" viewBox="0 0 110 110" class="progress-ring">
+              <defs>
+                <linearGradient id="prGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#ff6b2b" /><stop offset="50%" stop-color="#ee2b7b" /><stop offset="100%" stop-color="#7c3aed" />
+                </linearGradient>
+                <linearGradient id="prWarn" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#ef4444" /><stop offset="100%" stop-color="#f59e0b" />
+                </linearGradient>
+              </defs>
+              <circle cx="55" cy="55" r="49" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="6" />
+              <circle id="progress-circle" cx="55" cy="55" r="49" fill="none" stroke="url(#prGrad)" stroke-width="6" stroke-linecap="round" stroke-dasharray="307.88" stroke-dashoffset="307.88" />
+            </svg>
+            <div class="ring-text">
+              <div class="ring-elapsed" id="ring-elapsed">0:00</div>
+              <div class="ring-remaining" id="ring-remaining">-0:00</div>
+            </div>
+          </div>
+          <div class="track-details">
+            <div class="track-name" id="track-name">—</div>
+            <span class="badge" id="track-badge">Audio</span>
+            <div id="eq-small" class="eq-wrap eq-small"></div>
+            <!-- Seekable progress bar -->
+            <div class="seekbar-wrap" id="seekbar-wrap">
+              <div class="seekbar-bg">
+                <div class="seekbar-fill" id="seekbar-fill"></div>
+              </div>
+              <div class="seekbar-knob" id="seekbar-knob"></div>
+              <div class="seekbar-hover-line hidden" id="seekbar-hover-line"></div>
+              <div class="seekbar-tooltip hidden" id="seekbar-tooltip">0:00</div>
+            </div>
+            <div class="time-labels">
+              <span id="time-elapsed">0:00</span>
+              <span id="time-total">0:00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Idle state -->
+        <div id="idle-state" class="idle-wrap">
+          <div class="idle-icon">
+            <svg width="52" height="52" viewBox="0 0 100 100" fill="none">
+              <defs><linearGradient id="lg2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ff6b2b" /><stop offset="50%" stop-color="#ee2b7b" /><stop offset="100%" stop-color="#7c3aed" /></linearGradient></defs>
+              <rect x="4" y="4" width="92" height="92" rx="22" fill="#08080f" stroke="url(#lg2)" stroke-width="2.5" />
+              <rect x="44" y="30" width="12" height="26" rx="6" fill="url(#lg2)" />
+              <circle cx="50" cy="30" r="11" fill="url(#lg2)" />
+              <line x1="50" y1="56" x2="50" y2="70" stroke="url(#lg2)" stroke-width="3" stroke-linecap="round" />
+              <line x1="40" y1="70" x2="60" y2="70" stroke="url(#lg2)" stroke-width="3" stroke-linecap="round" />
+            </svg>
+          </div>
+          <p class="idle-text">Select a track or paste a link,<br>set your duration, and hit play.</p>
+        </div>
+
+        <!-- Hint cards -->
+        <div id="hints" class="hints">
+          <div class="hint"><div class="hint-icon">🎤</div><div class="hint-t">Karaoke Mode</div><div class="hint-d">Paste YouTube karaoke links</div></div>
+          <div class="hint"><div class="hint-icon">⏱</div><div class="hint-t">Timed Playback</div><div class="hint-d">Up to 20 min with alerts</div></div>
+          <div class="hint"><div class="hint-icon">🎬</div><div class="hint-t">Video Stage</div><div class="hint-d">Large immersive video playback</div></div>
+          <div class="hint"><div class="hint-icon">🔒</div><div class="hint-t">Focus Lock</div><div class="hint-d">Controls locked during playback</div></div>
+        </div>
+
+        <!-- Browser Mode active card -->
+        <div id="browser-card" class="browser-card hidden">
+          <div class="browser-icon">🌐</div>
+          <div class="browser-title">Browser Mode Active</div>
+          <div class="browser-sub">Video is playing in a separate window.<br>It will auto-close when the timer ends.</div>
+          <div class="browser-url" id="browser-url">—</div>
+        </div>
+
+        <!-- Completed state -->
+        <div id="completed-card" class="completed-card hidden">
+          <div class="completed-icon">✓</div>
+          <div class="completed-title">Playback Complete</div>
+          <div class="completed-sub" id="completed-sub">—</div>
+          <button class="new-song-btn" id="new-song-btn">🎤 Choose Next Song</button>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

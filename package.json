@@ -1,0 +1,115 @@
+{
+  "name": "stagelit",
+  "version": "1.0.0",
+  "description": "StageLit — Singing Orchestra & Karaoke Desktop App",
+  "main": "main.js",
+  "scripts": {
+    "postinstall": "node scripts/postinstall.js",
+    "download-ytdlp-all": "node scripts/download-ytdlp-target.js all",
+    "download-ytdlp-mac": "node scripts/download-ytdlp-target.js mac",
+    "download-ytdlp-win": "node scripts/download-ytdlp-target.js win",
+    "start": "electron .",
+
+    "build:mac-arm64": "electron-builder --mac --arm64",
+    "build:mac-x64": "electron-builder --mac --x64",
+    "build:mac-all": "npm run build:mac-arm64 && npm run build:mac-x64",
+
+    "build:win-x64": "electron-builder --win --x64",
+    "build:win-ia32": "electron-builder --win --ia32",
+    "build:win-all": "npm run build:win-x64 && npm run build:win-ia32",
+
+    "build:all": "npm run build:mac-all && npm run build:win-all",
+
+    "clean": "rm -rf dist/"
+  },
+  "author": "StageLit",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.0"
+  },
+  "build": {
+    "appId": "com.stagelit.app",
+    "productName": "StageLit",
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "assets/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "bin/",
+        "to": "bin/",
+        "filter": ["**/*"]
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.music",
+      "icon": "assets/icon.png",
+      "darkModeSupport": true,
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        },
+        {
+          "target": "zip",
+          "arch": ["x64", "arm64"]
+        }
+      ]
+    },
+    "dmg": {
+      "background": null,
+      "icon": "assets/icon.png",
+      "iconSize": 128,
+      "contents": [
+        { "x": 130, "y": 220 },
+        { "x": 410, "y": 220, "type": "link", "path": "/Applications" }
+      ],
+      "window": {
+        "width": 560,
+        "height": 400
+      }
+    },
+    "win": {
+      "icon": "assets/icon.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64", "ia32"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "assets/icon.png",
+      "uninstallerIcon": "assets/icon.png",
+      "installerSidebar": null,
+      "license": null,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "StageLit"
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-portable-${arch}.${ext}"
+    },
+    "linux": {
+      "icon": "assets/icon.png",
+      "category": "Audio",
+      "target": ["AppImage", "deb"]
+    }
+  }
+}

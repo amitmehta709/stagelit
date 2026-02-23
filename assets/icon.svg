@@ -1,0 +1,67 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f0a1a" />
+      <stop offset="100%" stop-color="#08080f" />
+    </linearGradient>
+    <linearGradient id="mainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff6b2b" />
+      <stop offset="50%" stop-color="#ee2b7b" />
+      <stop offset="100%" stop-color="#7c3aed" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="16" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="110" fill="url(#bgGrad)" />
+  <rect x="3" y="3" width="506" height="506" rx="108" fill="none" stroke="url(#mainGrad)" stroke-width="4" opacity="0.6" />
+
+  <!-- Spotlight beam -->
+  <path d="M256 80 L140 400 L372 400 Z" fill="url(#mainGrad)" opacity="0.06" />
+  <path d="M256 80 L120 420 L392 420 Z" fill="url(#mainGrad)" opacity="0.03" />
+
+  <!-- Sound waves left -->
+  <path d="M148 170 Q120 240 148 310" stroke="#ff6b2b" stroke-width="8" fill="none" opacity="0.5" stroke-linecap="round" filter="url(#glow)" />
+  <path d="M118 140 Q78 240 118 340" stroke="#ee2b7b" stroke-width="6" fill="none" opacity="0.3" stroke-linecap="round" />
+
+  <!-- Sound waves right -->
+  <path d="M364 170 Q392 240 364 310" stroke="#ff6b2b" stroke-width="8" fill="none" opacity="0.5" stroke-linecap="round" filter="url(#glow)" />
+  <path d="M394 140 Q434 240 394 340" stroke="#ee2b7b" stroke-width="6" fill="none" opacity="0.3" stroke-linecap="round" />
+
+  <!-- Microphone body -->
+  <rect x="224" y="170" width="64" height="130" rx="32" fill="url(#mainGrad)" filter="url(#softGlow)" />
+
+  <!-- Microphone head -->
+  <circle cx="256" cy="170" r="56" fill="url(#mainGrad)" filter="url(#softGlow)" />
+
+  <!-- Mic grille lines -->
+  <line x1="238" y1="128" x2="238" y2="210" stroke="#08080f" stroke-width="4" opacity="0.3" />
+  <line x1="250" y1="120" x2="250" y2="218" stroke="#08080f" stroke-width="4" opacity="0.3" />
+  <line x1="262" y1="120" x2="262" y2="218" stroke="#08080f" stroke-width="4" opacity="0.3" />
+  <line x1="274" y1="128" x2="274" y2="210" stroke="#08080f" stroke-width="4" opacity="0.3" />
+
+  <!-- Mic stand -->
+  <line x1="256" y1="300" x2="256" y2="380" stroke="url(#mainGrad)" stroke-width="12" stroke-linecap="round" filter="url(#glow)" />
+  <line x1="206" y1="380" x2="306" y2="380" stroke="url(#mainGrad)" stroke-width="12" stroke-linecap="round" filter="url(#glow)" />
+
+  <!-- Sparkles -->
+  <circle cx="100" cy="90" r="8" fill="#fbbf24" opacity="0.8" />
+  <circle cx="420" cy="70" r="6" fill="#ff6b2b" opacity="0.7" />
+  <circle cx="400" cy="430" r="6" fill="#ee2b7b" opacity="0.6" />
+  <circle cx="110" cy="420" r="5" fill="#7c3aed" opacity="0.7" />
+  <circle cx="180" cy="60" r="4" fill="#ee2b7b" opacity="0.5" />
+  <circle cx="340" cy="450" r="4" fill="#fbbf24" opacity="0.5" />
+</svg>

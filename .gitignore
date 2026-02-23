@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# yt-dlp binaries (downloaded during build, ~15-40MB each)
+bin/yt-dlp
+bin/yt-dlp_macos
+bin/yt-dlp_linux
+bin/yt-dlp.exe
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Electron
+*.asar
+
+# Environment
+.env
+.env.local
