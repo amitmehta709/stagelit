@@ -83,13 +83,16 @@ npm run clean
 | macOS | Intel | `StageLit-1.0.0-mac-x64.dmg` | ✅ Yes |
 | macOS | Apple Silicon | `StageLit-1.0.0-mac-arm64.zip` | ✅ Yes |
 | macOS | Intel | `StageLit-1.0.0-mac-x64.zip` | ✅ Yes |
+| Windows | Universal | `StageLit-1.0.0-win.exe` (installer, auto-detects 32/64-bit) | ✅ Yes |
 | Windows | 64-bit | `StageLit-1.0.0-win-x64.exe` (installer) | ✅ Yes |
-| Windows | 64-bit | `StageLit-1.0.0-portable-x64.exe` (portable) | ✅ Yes |
 | Windows | 32-bit | `StageLit-1.0.0-win-ia32.exe` (installer) | ✅ Yes |
+| Windows | 64-bit | `StageLit-1.0.0-portable-x64.exe` (portable) | ✅ Yes |
 
 > ⚠️ **Do NOT** share the bare `StageLit.exe` from inside `Program Files` or the binary from inside `StageLit.app/Contents/MacOS/` — these require the full app bundle to function.
 
 > **Cross-compilation:** You can build Windows `.exe` on macOS (requires Wine: `brew install --cask wine-stable`) and macOS `.dmg` for any architecture from any Mac.
+
+> **Windows builds:** Run Command Prompt as **Administrator**, or enable **Developer Mode** (Settings → Update & Security → For developers) to avoid symlink permission errors during build.
 
 ---
 
@@ -113,12 +116,13 @@ stagelit/
 ├── bin/                       # yt-dlp binary (auto-downloaded, gitignored)
 ├── assets/
 │   ├── icon.svg               # Vector logo
-│   └── icon.png               # App icon (512×512)
+│   ├── icon.png               # App icon for macOS/Linux (512×512)
+│   └── icon.ico               # App icon for Windows (multi-size)
 ├── build-mac.sh               # macOS build script
 ├── build-windows.bat          # Windows build script
 ├── build-all.sh               # All-platform build script
 ├── package.json               # Dependencies & electron-builder config
-├── .gitignore
+├── .gitignore                 # Excludes node_modules, dist, yt-dlp binaries
 └── README.md
 ```
 
@@ -171,3 +175,5 @@ The binary is stored in `bin/`, bundled inside the app via `extraResources`, and
 - In Browser Mode, the Electron window auto-closes when the timer ends
 - On macOS, the title bar uses `hiddenInset` style for a clean native look
 - First launch on macOS may trigger a Gatekeeper prompt — right-click → Open to allow
+- **Windows builds require `.ico` icons** — `assets/icon.ico` is used for the installer and app icon; `assets/icon.png` is used for macOS/Linux
+- **Windows builds may need admin privileges** — run as Administrator or enable Developer Mode to avoid symlink errors
